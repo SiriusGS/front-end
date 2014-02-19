@@ -1,0 +1,35 @@
+
+<RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android">
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Logout"
+            android:textSize="30dp"
+            android:id="@+id/Logout" android:layout_centerHorizontal="true" android:layout_centerVertical="true"
+            android:onClick="logout"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Text"
+            android:id="@+id/textView"
+            android:textSize="25dp"
+            android:layout_toRightOf="@+id/textView2" android:layout_alignTop="@+id/textView2"
+            android:textIsSelectable="true"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="You have logged in 1 times"
+            android:id="@+id/textView1"
+            android:textSize="24dp" android:layout_alignLeft="@+id/textView2" android:layout_alignParentTop="true"
+            android:layout_marginTop="70dp"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Welcome  "
+            android:id="@+id/textView2"
+            android:textSize="30dp"
+            android:layout_alignParentLeft="true" android:layout_marginLeft="40dp" android:layout_alignParentTop="true"
+            android:layout_marginTop="14dp"/>
+</RelativeLayout>
