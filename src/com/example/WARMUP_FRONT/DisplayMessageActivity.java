@@ -32,17 +32,16 @@ public class DisplayMessageActivity extends Activity {
         // Create the text view
         setContentView(R.layout.newpage);
 
-        new_username = (TextView) findViewById(R.id.textView);
+//        new_username = (TextView) findViewById(R.id.textView);
         new_count = (TextView) findViewById(R.id.textView1);
-        new_username.setText(username);
-        new_count.setText("You have logged in " + Integer.toString(count) + " times");
+       //new_username.setText(username);
+        new_count.setText("Welcome " +username + ". You have logged in " + count + " times.");
     }
 
 
-        public void logout(View view) {
-            this.finish();
+    public void logout(View view) {
+        this.finish();
 
-        }
+    }
 
-        }
-
+}

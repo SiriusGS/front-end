@@ -54,77 +54,76 @@ public class MyActivity extends Activity {
         }
     }
     public void clearText() {
-            ((EditText) findViewById(R.id.username)).setText("");
-            ((EditText) findViewById(R.id.password)).setText("");
-        }
-
-    private class GetResponse extends AsyncTask<String, Void, String> {
-            @Override
-            protected String doInBackground(String... urls) {
-
-                try {
-                    EditText et_un = (EditText) findViewById(R.id.username);
-                    EditText et_pw = (EditText) findViewById(R.id.password);
-                    String un = et_un.getText().toString();
-                    String pw = et_pw.getText().toString();
-
-                    DefaultHttpClient httpclient = new DefaultHttpClient();
-                    HttpPost httppost = new HttpPost(urls[0]);
-
-                    JSONObject holder = new JSONObject();
-                    holder.put("password", pw);
-                    holder.put("user", un);
-                    StringEntity se = new StringEntity(holder.toString());
-                    httppost.setEntity(se);
-                    httppost.setHeader("Accept", "application/json");
-                    httppost.setHeader("Content-type", "application/json");
-                    ResponseHandler responseHandler = new BasicResponseHandler();
-
-                    String response = (String) httpclient.execute(httppost, responseHandler);
-                    return un + "||" + response;
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return "Unable to retrieve web page. URL may be invalid.";
-                }
-            }
-
-
-            @Override
-        protected void onPostExecute(String result) {
-                try{
-                    clearText();
-
-                    String name = result.split("\\|\\|")[0];
-                    String jresult = result.split("\\|\\|")[1];
-                    JSONObject jo = new JSONObject(jresult);
-                    if (jo.getInt("errCode") == 1) {
-                        message.setText("Please enter your credentials below");
-                        Intent intent = new Intent(getApplicationContext(), DisplayMessageActivity.class);
-                        intent.putExtra(USERNAME, name);
-                        intent.putExtra(COUNT, jo.getInt("count"));
-
-                        startActivity(intent);
-                    } else if (jo.getInt("errCode") == -1) {
-                        message.setText("Invalid username and password combination. Please try again.");
-                    } else if (jo.getInt("errCode") == -2) {
-                        message.setText("This user name already exists. Please try again.");
-                    } else if (jo.getInt("errCode") == -3) {
-                        message.setText("The user name should not be empty and should be at most 128 characters long. Please try again.");
-                    } else if (jo.getInt("errCode") == -4) {
-                        message.setText("The password should be at most 128 characters long. Please try again.");
-                    } else {
-                        message.setText("unexpected errCode");
-                    }
-
-                } catch (Exception e) {
-                    message.setText("unexpected error");
-                }
-            }
-        }
-
-
-
-
+        ((EditText) findViewById(R.id.username)).setText("");
+        ((EditText) findViewById(R.id.password)).setText("");
     }
 
+    private class GetResponse extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+
+            try {
+                EditText new_uname = (EditText) findViewById(R.id.username);
+                EditText new_passw = (EditText) findViewById(R.id.password);
+                String un = new_uname.getText().toString();
+                String pw = new_passw.getText().toString();
+
+                DefaultHttpClient https = new DefaultHttpClient();
+                HttpPost httpp = new HttpPost(urls[0]);
+
+                JSONObject holder = new JSONObject();
+                holder.put("password", pw);
+                holder.put("user", un);
+                StringEntity str = new StringEntity(holder.toString());
+                httpp.setEntity(str);
+                httpp.setHeader("Accept", "application/json");
+                httpp.setHeader("Content-type", "application/json");
+                ResponseHandler responseHandler = new BasicResponseHandler();
+
+                String response = (String) https.execute(httpp, responseHandler);
+                return un + "||" + response;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "Unable to retrieve web page. URL may be invalid.";
+            }
+        }
+
+
+        @Override
+        protected void onPostExecute(String result) {
+            try{
+                clearText();
+
+                String name = result.split("\\|\\|")[0];
+                String jresult = result.split("\\|\\|")[1];
+                JSONObject jo = new JSONObject(jresult);
+                if (jo.getInt("errCode") == 1) {
+                    message.setText("Please enter your credentials below");
+                    Intent intent = new Intent(getApplicationContext(), DisplayMessageActivity.class);
+                    intent.putExtra(USERNAME, name);
+                    intent.putExtra(COUNT, jo.getInt("count"));
+
+                    startActivity(intent);
+                } else if (jo.getInt("errCode") == -1) {
+                    message.setText("Forget your password? Please try again.");
+                } else if (jo.getInt("errCode") == -2) {
+                    message.setText("Oh, this user name already exists. Please try again.");
+                } else if (jo.getInt("errCode") == -3) {
+                    message.setText("The user name should not be empty and <= 128 characters. Please try again.");
+                } else if (jo.getInt("errCode") == -4) {
+                    message.setText("The password should be <= 128 characters long. Please try again.");
+                } else {
+                    message.setText("unexpected errCode");
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+
+
+}
