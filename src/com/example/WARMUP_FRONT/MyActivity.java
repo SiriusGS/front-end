@@ -19,6 +19,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.*;
 
 public class MyActivity extends Activity {
+
+    /* Declare class variables that will be passed into DisplayMessageActivity */
     public final static String USERNAME = "com.example.WARMUP_FRONT.USERNAME";
     public final static String COUNT = "com.example.WARMUP_FRONT.COUNT";
     TextView message;
@@ -43,6 +45,7 @@ public class MyActivity extends Activity {
         } else {
             message.setText("No network connection.");
         }}
+    /** Called when the user clicks the addUser button */
     public void addUser(View view) {
         ConnectivityManager connMgr = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -53,11 +56,12 @@ public class MyActivity extends Activity {
             message.setText("No network connection .");
         }
     }
-    public void clearText() {
-        ((EditText) findViewById(R.id.username)).setText("");
-        ((EditText) findViewById(R.id.password)).setText("");
-    }
 
+
+     /* Asynchronous task to send the http post request
+
+      Found it on http://developer.android.com/reference/android/os/AsyncTask.html
+     */
     private class GetResponse extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... urls) {
@@ -74,14 +78,16 @@ public class MyActivity extends Activity {
                 JSONObject holder = new JSONObject();
                 holder.put("password", password);
                 holder.put("user", username);
-                StringEntity str = new StringEntity(holder.toString());
-                httpp.setEntity(str);
+                StringEntity string = new StringEntity(holder.toString());
+                httpp.setEntity(string);
                 httpp.setHeader("Accept", "application/json");
                 httpp.setHeader("Content-type", "application/json");
-                ResponseHandler responseHandler = new BasicResponseHandler();
+                ResponseHandler rH = new BasicResponseHandler();
 
-                String response = (String) https.execute(httpp, responseHandler);
-                return username + "||" + response;
+                String response = (String) https.execute(httpp, rH);
+                JSONObject jo = new JSONObject(response);
+                jo.put("name", username);
+                return jo.toString();
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -95,13 +101,12 @@ public class MyActivity extends Activity {
             try{
                 clearText();
 
-                String name = result.split("\\|\\|")[0];
-                String jresult = result.split("\\|\\|")[1];
-                JSONObject jo = new JSONObject(jresult);
+
+                JSONObject jo = new JSONObject( result);
                 if (jo.getInt("errCode") == 1) {
                     message.setText("Please enter your credentials below");
                     Intent intent = new Intent(getApplicationContext(), DisplayMessageActivity.class);
-                    intent.putExtra(USERNAME, name);
+                    intent.putExtra(USERNAME, jo.getString("name"));
                     intent.putExtra(COUNT, jo.getInt("count"));
 
                     startActivity(intent);
@@ -111,7 +116,7 @@ public class MyActivity extends Activity {
                     message.setText("Oh, this user name already exists. Please try again.");
                 } else if (jo.getInt("errCode") == -3) {
                     message.setText("The user name should not be empty and <= 128 characters. Please try again.");
-                } else if (jo.getInt("errCode") == -4) {
+                } else if (jo.getInt("errCode"  ) == -4) {
                     message.setText("The password should be <= 128 characters long. Please try again.");
                 } else {
                     message.setText("unexpected errCode");
@@ -123,7 +128,10 @@ public class MyActivity extends Activity {
         }
     }
 
-
-
+    /* function to clear user inputs*/
+    public void clearText() {
+        ((EditText) findViewById(R.id.username)).setText("");
+        ((EditText) findViewById(R.id.password)).setText("");
+    }
 
 }
