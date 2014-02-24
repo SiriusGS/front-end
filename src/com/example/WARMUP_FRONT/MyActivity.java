@@ -65,15 +65,15 @@ public class MyActivity extends Activity {
             try {
                 EditText new_uname = (EditText) findViewById(R.id.username);
                 EditText new_passw = (EditText) findViewById(R.id.password);
-                String un = new_uname.getText().toString();
-                String pw = new_passw.getText().toString();
+                String username = new_uname.getText().toString();
+                String password = new_passw.getText().toString();
 
                 DefaultHttpClient https = new DefaultHttpClient();
                 HttpPost httpp = new HttpPost(urls[0]);
 
                 JSONObject holder = new JSONObject();
-                holder.put("password", pw);
-                holder.put("user", un);
+                holder.put("password", password);
+                holder.put("user", username);
                 StringEntity str = new StringEntity(holder.toString());
                 httpp.setEntity(str);
                 httpp.setHeader("Accept", "application/json");
@@ -81,7 +81,7 @@ public class MyActivity extends Activity {
                 ResponseHandler responseHandler = new BasicResponseHandler();
 
                 String response = (String) https.execute(httpp, responseHandler);
-                return un + "||" + response;
+                return username + "||" + response;
 
             } catch (Exception e) {
                 e.printStackTrace();
